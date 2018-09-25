@@ -3,6 +3,7 @@ const bodyParser = require('body-parser');
 const crypto = require('crypto')
 const exec = require('child_process').exec;
 
+
 const host = express();
 host.use(bodyParser.json());
 
@@ -40,7 +41,6 @@ const verifyPostData = (req, res, next) => {
   return next()
 };
 
-
 host.post('/payload', verifyPostData, async (req, res) => {
   if (!req.headers['x-github-event']) {
      return res.status(400).send('Github event headers missing');
@@ -51,7 +51,6 @@ host.post('/payload', verifyPostData, async (req, res) => {
     case 'pull_request': processPullRequest(req.body); break;
     default: return res.status(400).send('Wrong github event');
   }
-
   res.status(200).send('ok');
 });
 
