@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
-rm -rf active/$1
-git clone -b $1 --single-branch https://github.com/youaresofunny/bitshares-community-ui.git active/$1
+sudo rm -rf active/$1
+git clone -b $1 --single-branch https://github.com/bitshares/bitshares-community-ui.git active/$1
 cd active/$1
 sed -i 's/git@github.com:/https:\/\/github.com\//' .gitmodules
 git submodule init
