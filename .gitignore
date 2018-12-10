@@ -2,3 +2,4 @@ node_modules/
 active/*
 !active/index.html
 package-lock.json
+error.log

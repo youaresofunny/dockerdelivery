@@ -75,19 +75,21 @@ host.post('/payload', verifyPostData, async (req, res) => {
   res.status(200).send('ok');
 });
 
-host.get('/test', async (req, res) => {
+host.get('/manual', async (req, res) => {
+  const ref = req.query.ref;
+  if (ref) {
+    updateBuilderPage(ref, 'building');
+    exec(`./builder.sh "${ref}"`,(error, stdout) => {
+      console.log(`out: ${stdout}`);
+      if (error !== null) {
+        console.log('WTF!', error);
+        updateBuilderPage(ref, 'fail');
+      } else {
+        updateBuilderPage(ref, 'done');
+      }
+    });
+  }
   res.status(200).send('ok');
-  const ref = 'staging';
-  updateBuilderPage(ref, 'building');
-  exec(`./builder.sh "${ref}"`,(error, stdout) => {
-    console.log(`out: ${stdout}`);
-    if (error !== null) {
-      console.log('WTF!', error);
-      updateBuilderPage(ref, 'fail');
-    } else {
-      updateBuilderPage(ref, 'done');
-    }
-  });
 });
 
 host.listen(8000, () => console.log('Host is up'));
