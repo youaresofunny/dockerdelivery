@@ -10,14 +10,15 @@ const host = express();
 host.use(bodyParser.json());
 
 const updateBuilderPage = (refname, status) => {
+  let replacedRef = 'branch-' + refname.replace('#','')
   const html = fs.readFileSync("./active/index.html", "utf8");
   const { document: doc} = (new JSDOM(html)).window;
   const container = doc.getElementById('container');
-  const ref = doc.getElementById(refname);
+  const ref = doc.getElementById(replacedRef);
   if (ref) {
-    ref.innerHTML = `Branch: ${refname}, link: http://staging-ui.trusty.apasia.tech:8080/${refname}, status: ${status}`;
+    ref.innerHTML = `Branch: ${replacedRef}, link: <a href="http://staging-ui.trusty.apasia.tech:8080/${replacedRef}">LINK</a>, status: ${status}`;
   } else {
-    container.innerHTML += `<div id='${refname}'>Branch: ${refname}, link: http://staging-ui.trusty.apasia.tech:8080/${refname}, status: ${status}</div>`;
+    container.innerHTML += `<div id='${replacedRef}'>Branch: ${replacedRef}, <a href="http://staging-ui.trusty.apasia.tech:8080/${replacedRef}">LINK</a>, status: ${status}</div>`;
   }
   fs.writeFileSync('./active/index.html', doc.documentElement.outerHTML);
 }
@@ -76,9 +77,9 @@ host.post('/payload', verifyPostData, async (req, res) => {
 
 host.get('/test', async (req, res) => {
   res.status(200).send('ok');
-  const ref = 'builder';
+  const ref = 'staging';
   updateBuilderPage(ref, 'building');
-  exec(`./builder.sh ${ref}`,(error, stdout) => {
+  exec(`./builder.sh "${ref}"`,(error, stdout) => {
     console.log(`out: ${stdout}`);
     if (error !== null) {
       console.log('WTF!', error);
