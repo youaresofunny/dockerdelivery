@@ -1,7 +1,7 @@
 #!/bin/bash
 branch=$1
 truncated=$( echo $branch | tr -d \# )
-sudo rm -rf active/$truncated
+sudo rm -rf active/branch-$truncated
 git clone -b $branch --single-branch https://github.com/bitshares/bitshares-community-ui.git active/branch-$truncated
 cd active/branch-$truncated
 sed -i 's/git@github.com:/https:\/\/github.com\//' .gitmodules
